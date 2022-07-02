@@ -20,7 +20,7 @@ export default function App() {
                     <Route path="/" element={<Navigate replace to="/login" />} />
                     <Route path="/login" element={<LoginScreen />}/>
                     <Route path="/cadastro" element={<RegisterScreen />}/>
-                    <Route path="/saldo" element={<MainScreen />}/>
+                    <Route path="/extrato" element={<MainScreen />}/>
                     <Route path="/deposito" element={<DepositScreen />}/>
                     <Route path="/saque" element={<WithdrawScreen />}/>
                 </Routes>
