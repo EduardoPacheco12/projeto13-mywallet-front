@@ -14,37 +14,61 @@ export default function RegisterScreen() {
     const navigate = useNavigate();
 
     function FinishRegister(e) {
-        e.preventdefault();
+        e.preventDefault();
         setLoading(true);
-        const body = {
-            name,
-            email,
-            password
-        };
-        const promise = axios.post("https://localhost:5000/cadastro", body);
-        promise.then( () => {
-            navigate("/");
-        })
-        promise.catch( () => {
-            alert("Esses dados já foram utilizados para cadastro")
-            setLoading(false)
-            setName("")
-            setEmail("")
-            setPassword("")
-            setConfirmPassword("")
-        })
+        if (password !== confirmPassword) {
+            alert("Os campos de 'Senha' e 'Confirmar senha' devem ser iguais");
+            setLoading(false);
+        } else {
+            const body = {
+                name,
+                email,
+                password
+            };
+            const promise = axios.post("http://localhost:5000/cadastro", body);
+            promise.then( () => {
+                setLoading(false);
+                navigate("/");
+            })
+            promise.catch( (error) => {
+                if(error.response.status === 422) {
+                    alert("Esses dados já foram utilizados para cadastro")
+                    setLoading(false);
+                    setName("");
+                    setEmail("");
+                    setPassword("");
+                    setConfirmPassword("");
+                }
+                if(error.response.status === 409) {
+                    alert("Esses dados já foram utilizados para cadastro")
+                    setLoading(false);
+                    setName("");
+                    setEmail("");
+                    setPassword("");
+                    setConfirmPassword("");
+                }
+                if(error.response.status === 500) {
+                    alert("Erro no server!!!")
+                    setLoading(false);
+                    setName("");
+                    setEmail("");
+                    setPassword("");
+                    setConfirmPassword("");
+                }
+            })
+        }
     }
     //UI
     return (
         <All>
-            <Logo>
+            <Title>
                 <h1>MyWallet</h1>
-            </Logo>
+            </Title>
             <Forms onSubmit={FinishRegister}>
-                <input type="name" placeholder="Nome" disabled={loading === true ? true : false} onChange={(e) => setName(e.target.value)} value={name} required/>
+                <input type="name" placeholder="Nome" max="25" disabled={loading === true ? true : false} onChange={(e) => setName(e.target.value)} value={name} required/>
                 <input type="email" placeholder="E-mail" disabled={loading === true ? true : false} onChange={(e) => setEmail(e.target.value)} value={email} required/>
-                <input type="password" placeholder="Senha" disabled={loading === true ? true : false} onChange={(e) => setPassword(e.target.value)} value={password} required/>
-                <input type="password" placeholder="Confirme a senha" disabled={loading === true ? true : false} onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword} required/>
+                <input type="password" placeholder="Senha" max="20" disabled={loading === true ? true : false} onChange={(e) => setPassword(e.target.value)} value={password} required/>
+                <input type="password" placeholder="Confirme a senha" max="20" disabled={loading === true ? true : false} onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword} required/>
                 <button type="submit" disabled={loading === true ? true : false}>
                     {loading === true ? <ThreeDots color="#FFFFFF" height={80} width={80} /> : "Cadastrar"}
                 </button>
@@ -64,7 +88,7 @@ const All = styled.div `
     margin-top: 95px;
 `;
 
-const Logo = styled.div`
+const Title = styled.header`
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
@@ -108,6 +132,9 @@ const Forms = styled.form `
         max-width: 326px;
         height: 46px;
         margin-bottom: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background-color: #A328D6;
         border: 1px solid #A328D6; 
         border-radius: 5px;

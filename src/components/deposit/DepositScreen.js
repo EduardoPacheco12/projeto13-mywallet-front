@@ -3,7 +3,6 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from  "react-loader-spinner";
-import dayjs from "dayjs";
 import Context from "../context/Context";
 
 export default function DepositScreen() {
@@ -14,13 +13,11 @@ export default function DepositScreen() {
     const { token } = useContext(Context);
     const navigate = useNavigate();
     function FinishDeposit(e) {
-        e.preventdefault();
+        e.preventDefault();
         setLoading(true);
         const body = {
             value,
             description,
-            type: "depósito",
-            day: dayjs().format("DD/MM/YYYY")
         };
         const config = {
             headers: {
@@ -34,19 +31,24 @@ export default function DepositScreen() {
             navigate("/extrato")
         })
         promise.catch((error) => {
-            alert("Depósito não concluído, tente novamente")
-            setValue("");
-            setDescription("");
-            setLoading(false);
-            console.log(error);
+            if(error.response.status === 498) {
+                alert("Não foi possivel realizar a transação, faça o login novamente")
+                setLoading(false);
+                navigate("/login");
+            } else {
+                alert("Depósito não concluído, tente novamente")
+                setValue("");
+                setDescription("");
+                setLoading(false);
+            }
         });
     }
     //UI
     return(
         <>  
-            <Title>
+            <Top>
                 <h1>Nova entrada</h1>
-            </Title>
+            </Top>
             <Body>
                 <Forms onSubmit={FinishDeposit}>
                     <input type="number" placeholder="Valor" disabled={loading === true ? true : false} onChange={(e) => setValue(e.target.value)} value={value} required/>
@@ -61,7 +63,7 @@ export default function DepositScreen() {
     );
 }
 
-const Title = styled.div `
+const Top = styled.header `
     margin-top: 25px;
     margin-left: 25px;
     h1 {
@@ -112,6 +114,9 @@ const Forms = styled.form `
         max-width: 326px;
         height: 46px;
         margin-bottom: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background-color: #A328D6;
         border: 1px solid #A328D6; 
         border-radius: 5px;

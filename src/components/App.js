@@ -12,9 +12,10 @@ import "../assets/css/style.css";
 export default function App() {
     //LOGIN
     const [token, setToken] = useState("");
+    const [name, setName] = useState("");
     //UI
     return(
-        <Context.Provider value={{token, setToken}}>
+        <Context.Provider value={{token, setToken, name, setName}}>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Navigate replace to="/login" />} />

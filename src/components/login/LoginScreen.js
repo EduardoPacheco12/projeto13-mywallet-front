@@ -7,7 +7,7 @@ import { ThreeDots } from  "react-loader-spinner";
 
 export default function LoginScreen() {
     //LOGIC
-    const {setToken} = useContext(Context);
+    const {setToken, setName} = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -20,13 +20,14 @@ export default function LoginScreen() {
             email,
             password
         }
-        const promise = axios.post("https://localhost:5000/login", body);
+        const promise = axios.post("http://localhost:5000/login", body);
         promise.then( response => {
             setToken(response.data.token);
+            setName(response.data.name);
             setLoading(false);
-            navigate("/saldo");
+            navigate("/extrato");
         })
-        promise.catch(() => {
+        promise.catch((error) => {
             alert("Não foi possível fazer o login, tente novamente.")
             setLoading(false);
             setEmail("");
@@ -37,12 +38,12 @@ export default function LoginScreen() {
     //UI
     return(
         <All>
-            <Logo>
+            <Title>
                 <h1>MyWallet</h1>
-            </Logo>
+            </Title>
             <Forms onSubmit={FinishLogin}>
                 <input type="email" placeholder="E-mail" disabled={loading === true ? true : false} onChange={(e) => setEmail(e.target.value)} value={email} required/>
-                <input type="password" placeholder="Senha" disabled={loading === true ? true : false} onChange={(e) => setPassword(e.target.value)} value={password} required/>
+                <input type="password" placeholder="Senha" max="20" disabled={loading === true ? true : false} onChange={(e) => setPassword(e.target.value)} value={password} required/>
                 <button type="submit" disabled={loading === true ? true : false}>
                     {loading === true ? <ThreeDots color="#FFFFFF" height={80} width={80} /> : "Entrar"}
                 </button>
@@ -62,7 +63,7 @@ const All = styled.div `
     margin-top: 160px;
 `;
 
-const Logo = styled.div`
+const Title = styled.header`
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
@@ -106,6 +107,9 @@ const Forms = styled.form `
         max-width: 326px;
         height: 46px;
         margin-bottom: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background-color: #A328D6;
         border: 1px solid #A328D6; 
         border-radius: 5px;

@@ -3,7 +3,6 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from  "react-loader-spinner";
-import dayjs from "dayjs";
 import Context from "../context/Context";
 
 export default function WithdrawScreen() {
@@ -15,13 +14,11 @@ export default function WithdrawScreen() {
     const navigate = useNavigate();
     
     function FinishWithdraw(e) {
-        e.preventdefault();
+        e.preventDefault();
         setLoading(true);
         const body = {
             value,
-            description,
-            type: "saque",
-            day: dayjs().format("DD/MM/YYYY")
+            description
         };
         const config = {
             headers: {
@@ -32,22 +29,27 @@ export default function WithdrawScreen() {
 
         promise.then(() => {
             setLoading(false);
-            navigate("/extrato")
+            navigate("/extrato");
         })
         promise.catch((error) => {
-            alert("Saque não concluído, tente novamente")
-            setValue("");
-            setDescription("");
-            setLoading(false);
-            console.log(error);
+            if(error.response.status === 498) {
+                alert("Não foi possivel realizar a transação, faça o login novamente")
+                setLoading(false);
+                navigate("/login");
+            } else {
+                alert("Saque não concluído, tente novamente")
+                setValue("");
+                setDescription("");
+                setLoading(false);
+            }
         });
     }
     //UI
     return(
         <>  
-            <Title>
+            <Top>
                 <h1>Nova saída</h1>
-            </Title>
+            </Top>
             <Body>
                 <Forms onSubmit={FinishWithdraw}>
                     <input type="number" placeholder="Valor" disabled={loading === true ? true : false} onChange={(e) => setValue(e.target.value)} value={value} required/>
@@ -61,7 +63,7 @@ export default function WithdrawScreen() {
     );
 }
 
-const Title = styled.div `
+const Top = styled.header `
     margin-top: 25px;
     margin-left: 25px;
     h1 {
@@ -89,7 +91,7 @@ const Forms = styled.form `
         max-width: 326px;
         height: 58px;
         margin-bottom: 14px;
-        background: #FFFFFF;
+        background-color: #FFFFFF;
         border: 1px solid #FFFFFF;
         border-radius: 5px;
         font-family: 'Raleway';
@@ -112,6 +114,9 @@ const Forms = styled.form `
         max-width: 326px;
         height: 46px;
         margin-bottom: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background-color: #A328D6;
         border: 1px solid #A328D6; 
         border-radius: 5px;
