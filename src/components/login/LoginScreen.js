@@ -20,14 +20,14 @@ export default function LoginScreen() {
             email,
             password
         }
-        const promise = axios.post("http://localhost:5000/login", body);
+        const promise = axios.post("https://mywallet-back-edupacheco.herokuapp.com/login", body);
         promise.then( response => {
             setToken(response.data.token);
             setName(response.data.name);
             setLoading(false);
             navigate("/extrato");
         })
-        promise.catch((error) => {
+        promise.catch(() => {
             alert("Não foi possível fazer o login, tente novamente.")
             setLoading(false);
             setEmail("");

@@ -25,7 +25,7 @@ export default function WithdrawScreen() {
                 "Authorization": `Bearer ${token}`
             }
         }
-        const promise = axios.post("http://localhost:5000/saque", body, config);
+        const promise = axios.post("https://mywallet-back-edupacheco.herokuapp.com/saque", body, config);
 
         promise.then(() => {
             setLoading(false);

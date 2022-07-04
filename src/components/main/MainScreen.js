@@ -29,7 +29,7 @@ export default function MainScreen() {
                 "Authorization": `Bearer ${token}`
             }
         }
-        const promise = axios.get("http://localhost:5000/extrato", config);
+        const promise = axios.get("https://mywallet-back-edupacheco.herokuapp.com/extrato", config);
         promise.then((response) => {
             setStatements(response.data.array);
             setTotalValue(response.data.totalValue);

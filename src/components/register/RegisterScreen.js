@@ -25,7 +25,7 @@ export default function RegisterScreen() {
                 email,
                 password
             };
-            const promise = axios.post("http://localhost:5000/cadastro", body);
+            const promise = axios.post("https://mywallet-back-edupacheco.herokuapp.com/cadastro", body);
             promise.then( () => {
                 setLoading(false);
                 navigate("/");

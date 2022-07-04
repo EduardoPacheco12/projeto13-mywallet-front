@@ -24,7 +24,7 @@ export default function DepositScreen() {
                 "Authorization": `Bearer ${token}`
             }
         }
-        const promise = axios.post("http://localhost:5000/deposito", body, config);
+        const promise = axios.post("https://mywallet-back-edupacheco.herokuapp.com/deposito", body, config);
 
         promise.then(() => {
             setLoading(false);
