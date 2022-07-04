@@ -87,7 +87,7 @@ export default function MainScreen() {
 const Loading = styled.div `
     display: flex;
     justify-content: center;
-    align-items: center;
+    margin-top: 325px;
 `;
 
 const Body = styled.div `
